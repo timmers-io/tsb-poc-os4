@@ -24,7 +24,7 @@ oc create ns tsb
 
 ```
 
-Create the cert-manager configuration - note the dnsNames in the xcp-central-cert.  Refer to the documentation for a complete description of the certificate requirements.
+Create the cert-manager configuration - note the **dnsNames in the xcp-central-cert**.  Refer to the documentation for a complete description of the certificate requirements.
 
 https://docs.tetrate.io/service-bridge/1.4.x/en-us/setup/on_prem/certificate-requirements
 
@@ -118,4 +118,8 @@ oc apply -f "${FOLDER}/tsb-certs-infra-cert-manager.yaml"
 
 ### Verify the certificates are created in the tsb namespace
 
+```bash
+oc get certificates -n tsb
+oc get secrets -n tsb | grep tls
 
+```

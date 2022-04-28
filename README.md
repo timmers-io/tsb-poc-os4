@@ -5,6 +5,12 @@ Tetrate Service Bridge (TSB) on OpenShift 4
 We will be using the included default demo installations for PostgreSQL and LDAP.
 
 We will install cert-manager and Elasticsearch before installing TSB.
-- Install cert-manager and create certificates [cert-manager](/cert-manager.md)  
-- Install the Elasticsearch operator and create the Elasticsearch instance
-- Begin the TSB Management Plane installation
+
+TSB proof of concept files
+
+| Steps                              | Description |
+| :---                               | ----        |
+| [cert-manager](/cert-manager.md)   | Install cert-manager and create certificates |
+| [Elasticsearch](/elastic.md)       | Install the Elasticsearch operator and create the Elasticsearch instance |
+| | Begin the TSB Management Plane installation|
+
