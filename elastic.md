@@ -66,3 +66,8 @@ oc get all -n es
 
 ```
 
+When the pod is running, it will look like this:
+```console
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/elasticsearch-es-default-0   1/1     Running   0          110s
+```
