@@ -8,6 +8,8 @@ Tetrate Service Bridge (TSB) on OpenShift 4
 - Elasticsearch 7.15.2
 - TSB 1.4.7
 
+Generated and working files will be placed in the "files" directory.  After cloning the repo, create the "files" directory.
+
 ## Steps to prepare the Management Plane cluster 
 We will be using the included default demo installations for PostgreSQL and LDAP for this Proof of Concept (POC) installation.
 
@@ -22,3 +24,4 @@ TSB proof of concept files
 | [tsb-mp](/tsb-mp.md)             | TSB Management Plane installation |
 |              | Onboarding additional clusters |
 
+Generated and working files will be placed in the "files" directory.  After cloning the repo, create the "files" directory.

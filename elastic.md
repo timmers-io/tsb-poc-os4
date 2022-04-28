@@ -7,7 +7,6 @@
 From the root folder of this project, set these enviroment variables
 ```bash
 export FOLDER='./files'
-export TSB_FQDN="tiaa-alpha.cx.tetrate.info"
 
 ```
 
