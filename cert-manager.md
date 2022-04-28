@@ -10,6 +10,11 @@ oc apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.
 
 ```
 
+Verify the installation
+```bash
+oc get all -n cert-manager
+
+```
 
 From the root folder of this project, set these enviroment variables
 ```bash
@@ -108,6 +113,7 @@ spec:
     - client auth
     - server auth
 EOF
+
 ```
 
 Apply the generated configuration:

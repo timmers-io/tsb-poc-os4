@@ -41,8 +41,6 @@ export TCTL_CONFIG=./tctl-config.yaml
 
 tctl version
 
-tctl config view
-
 ```
 
 In OpenShift, the TSB operator needs the anyuid SCC in order to be able to start the webhooks for validating and setting defaults to the ManagementPlane resources.
@@ -123,7 +121,7 @@ oc apply -f "${FOLDER}/tsb-certs-certificate.yaml"
 
 ```
 
-Now we’re ready to deploy the management plane.
+### Now we’re ready to deploy the management plane.
 
 To deploy the management plane we need to create a ManagementPlane custom resource in the Kubernetes cluster that describes the management plane.
 
