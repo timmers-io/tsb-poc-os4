@@ -14,7 +14,7 @@ oc apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.
 From the root folder of this project, set these enviroment variables
 ```bash
 export FOLDER='./files'
-export TSB_FQDN="<insert your FQDN here>"
+export TSB_FQDN="tsb.example.tetrate.com"
 
 ```
 
