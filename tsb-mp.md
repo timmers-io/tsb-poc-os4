@@ -157,8 +157,77 @@ EOF
 
 ```
 
+Before applying it, bear in mind that you will have to allow the service accounts of the different management plane components to your OpenShift Authorization Policies.
+```bash
+oc adm policy add-scc-to-user anyuid -n tsb -z tsb-iam
+oc adm policy add-scc-to-user anyuid -n tsb -z tsb-oap
+oc adm policy add-scc-to-user anyuid -n tsb -z default
+oc adm policy add-scc-to-user anyuid -n tsb -z tsb-zipkin
+oc adm policy add-scc-to-user privileged -n tsb -z tsb-zipkin
+
+```
+
+
 ```bash
 oc apply -f ${FOLDER}/managementplane.yaml
 
 ```
 
+You can monitor the progress of the pods starting up:
+```console
+$ oc get po -n tsb
+NAME                                            READY   STATUS              RESTARTS   AGE
+envoy-866cb587cd-2xk4p                          1/1     Running             0          25s
+envoy-866cb587cd-mhgbz                          1/1     Running             0          25s
+iam-5cdcbd754-c7dmb                             0/1     Init:0/6            0          21s
+ldap-69f8665fc8-bjvbw                           1/1     Running             0          21s
+mpc-5c7fbdfc6f-8hxrs                            0/1     ContainerCreating   0          21s
+oap-864784847c-9x5f7                            0/1     Init:0/2            0          21s
+otel-collector-5c58db5998-vrl4m                 1/1     Running             0          25s
+postgres-d86ccf878-cktg7                        0/1     ContainerCreating   0          21s
+tsb-7f7cd9cf7c-7c8rp                            0/1     Init:0/2            0          25s
+tsb-operator-management-plane-55b84b5fd-4lflf   1/1     Running             0          4m4s
+web-59f59c9dcd-48v54                            0/1     CrashLoopBackOff    1          21s
+xcp-operator-central-57fbd977bf-4lq9r           1/1     Running             0          21s
+zipkin-6bdf758584-ntc55                         0/1     Init:2/3            0          21s
+```
+
+We need to make sure the teamsync runs before logging in for the first time.
+```bash
+oc create job -n tsb teamsync-bootstrap --from=cronjob/teamsync
+
+```
+
+After the teamsync job completes, test the connection:
+```bash
+export TCTL_CONFIG=./files/tctl-config.yaml
+
+tctl config clusters set default --bridge-address $TSB_FQDN:8443
+
+# if self-signed cert in use
+tctl config clusters set default --tls-insecure
+
+tctl config view
+```
+
+### NOTE: we now need to update DNS to point to the LoadBalancer service created for envoy
+Check the EXTERNAL-IP from the envoy service - use this to create/update the DNS record for the $TSB_FQDN we have configured
+
+```bash
+oc get svc -n tsb envoy
+
+```
+
+### After DNS is configured and propagated, you can test the service by logging in:
+
+Login with the CLI
+```bash
+tctl login --org tetrate --tenant tetrate --username admin --password Tetrate123
+
+```
+
+Open in a browser
+```bash
+tctl ui
+
+```
