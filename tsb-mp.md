@@ -192,7 +192,7 @@ xcp-operator-central-57fbd977bf-4lq9r           1/1     Running             0   
 zipkin-6bdf758584-ntc55                         0/1     Init:2/3            0          21s
 ```
 
-We need to make sure the teamsync runs before logging in for the first time.
+After the pods are all running, we need to make sure the teamsync runs before logging in for the first time.
 ```bash
 oc create job -n tsb teamsync-bootstrap --from=cronjob/teamsync
 
