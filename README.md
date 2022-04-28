@@ -22,4 +22,3 @@ TSB proof of concept files
 | [tsb-mp](/tsb-mp.md)             | TSB Management Plane installation |
 |              | Onboarding additional clusters |
 
-Generated and working files will be placed in the "files" directory.  After cloning the repo, create the "files" directory.
