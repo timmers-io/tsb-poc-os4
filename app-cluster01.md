@@ -86,7 +86,7 @@ Then you can run the following command to generate the control plane secrets:
 ```bash
 export ES_CACERT=`oc get secret elasticsearch-es-http-ca-internal -n es -o json | jq -r '.data."tls.crt"' | base64 -d | awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'`
 export ES_PASSWORD=`oc get secret -n es elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 -d`
-export XCP_CA_CERT=`kubectl get secrets -n tsb xcp-central-cert -ojsonpath='{.data.ca\.crt}' | base64 -d`
+export XCP_CA_CERT=`oc get secrets -n tsb xcp-central-cert -ojsonpath='{.data.ca\.crt}' | base64 -d`
 
 tctl install manifest control-plane-secrets \
     --cluster "$CLUSTER_NAME" \
@@ -106,15 +106,6 @@ oc apply -f ${FOLDER}/controlplane-secrets.yaml
 You can view the new secrets:
 ```bash
 oc get secrets -n istio-system
-
-```
-
-Again, you will have to allow the service accounts of the different control plane components to your OpenShift Authorization Policies.
-```bash
-oc adm policy add-scc-to-user anyuid -n istio-system -z istiod-service-account # SA for istiod
-oc adm policy add-scc-to-user anyuid -n istio-system -z vmgateway-service-account # SA for vmgateway
-oc adm policy add-scc-to-user anyuid -n istio-system -z istio-system-oap # SA for OAP
-oc adm policy add-scc-to-user privileged -n istio-system -z xcp-edge # SA for XCP-Edge
 
 ```
 
@@ -177,24 +168,47 @@ oc apply -f ${FOLDER}/${CLUSTER_NAME}-controlplane-config.yaml
 
 ```
 
+Again, you will have to allow the service accounts of the different control plane components to your OpenShift Authorization Policies. After the controlplane-config is applied above, run these commands:
+```bash
+oc adm policy add-scc-to-user anyuid -n istio-system -z istiod-service-account # SA for istiod
+oc adm policy add-scc-to-user anyuid -n istio-system -z vmgateway-service-account # SA for vmgateway
+oc adm policy add-scc-to-user anyuid -n istio-system -z istio-system-oap # SA for OAP
+oc adm policy add-scc-to-user privileged -n istio-system -z xcp-edge # SA for XCP-Edge
+
+```
+
 You can monitor the pods coming up:
 ```bash
 oc get po -n istio-system
 
 ```
 
-You may see:
+You should see these pods running - with the onboarding-operator in CrashLoopBackOff:
 ```console
 $ oc get po -n istio-system
 NAME                                                     READY   STATUS             RESTARTS   AGE
-istio-operator-7f4787f9b8-l7r55                          1/1     Running            0          2m51s
-istio-system-custom-metrics-apiserver-6c5d67698c-94sw5   1/1     Running            0          2m51s
-oap-deployment-56d7cbc444-d6pjg                          1/2     CrashLoopBackOff   4          2m50s
-onboarding-operator-5947659bdc-fjrkd                     0/1     CrashLoopBackOff   4          2m50s
-otel-collector-68fc895cb7-5p7nh                          2/2     Running            0          2m51s
-tsb-operator-control-plane-d5f87f5bb-mf555               1/1     Running            0          43m
-xcp-operator-edge-79c799b458-wws4j                       1/1     Running            0          2m51s
-zipkin-6f4d7bbd64-qhqrm                                  2/2     Running            0          2m51s
+edge-7d96847559-6bkck                                    1/1     Running            5          61m
+istio-operator-7f4787f9b8-qqmrp                          1/1     Running            0          15h
+istio-system-custom-metrics-apiserver-6c5d67698c-8wwq7   1/1     Running            0          15h
+istiod-69d9d88cc7-26pfz                                  1/1     Running            0          64m
+oap-deployment-56d7cbc444-zm6cg                          2/2     Running            0          47m
+onboarding-operator-5947659bdc-k2z9w                     0/1     CrashLoopBackOff   12         42m
+otel-collector-68fc895cb7-mm67x                          2/2     Running            0          15h
+tsb-operator-control-plane-d5f87f5bb-mf555               1/1     Running            0          16h
+vmgateway-6dc8498f4-rwglz                                1/1     Running            0          61m
+xcp-operator-edge-79c799b458-wj47x                       1/1     Running            0          15h
+zipkin-6f4d7bbd64-hlzjk                                  2/2     Running            0          15h
+```
+
+In this release, we need to patch the cluster role for the onboarding-operator:
+```bash
+oc apply -f patches/clusterrole-istio-system-onboarding-operator.yaml
+
+```
+Then, delete the onboarding-operator pod - it will be recreated and should start up without error. Of course, you need to replace the pod name:
+```bash
+oc delete po -n istio-system onboarding-operator-5947659bdc-k2z9w
+
 ```
 
 
