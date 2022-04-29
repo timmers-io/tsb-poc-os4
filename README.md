@@ -22,5 +22,6 @@ TSB proof of concept files
 | [tsb-mp](/tsb-mp.md)                 | TSB Management Plane installation |
 | [app-cluster01](/app-cluster01.md)   | Onboarding the mp cluster as an application cluster |
 | [app-cluster02](/app-cluster02.md)   | Onboarding additional clusters |
-| bookinfo             | Deploying bookinfo |
+| [bookinfo](/bookinfo.md)             | Deploying bookinfo |
+| tsb-config                           | Creating TSB Tenants, Workspaces, and Groups |
 

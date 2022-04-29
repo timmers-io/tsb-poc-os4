@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synthetic-wget
+  labels:
+    app: synthetic-wget
+    version: bookinfo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synthetic-wget
+      version: bookinfo
+  template:
+    metadata:
+      labels:
+        app: synthetic-wget
+        version: bookinfo
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - while true; do /bin/wget -O - -S http://productpage.bookinfo.svc.cluster.local:9080/productpage | grep title; date; sleep 2; done; exit 1
+        image: us-central1-docker.pkg.dev/timmers-315717/tsb-147/busybox:1.30
+        imagePullPolicy: IfNotPresent
+        name: busybox-wget
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: synthetic-wget-headless
+spec:
+  clusterIP: None 
+  selector:
+    app: synthetic-wget
