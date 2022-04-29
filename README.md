@@ -23,5 +23,6 @@ TSB proof of concept files
 | [app-cluster01](/app-cluster01.md)   | Onboarding the mp cluster as an application cluster |
 | [app-cluster02](/app-cluster02.md)   | Onboarding additional clusters |
 | [bookinfo](/bookinfo.md)             | Deploying bookinfo |
-| tsb-config                           | Creating TSB Tenants, Workspaces, and Groups |
+| [tsb-config](/tsb-config.md)         | Creating TSB Tenants, Workspaces, and Groups |
+| use-cases                            | Implementing Use Cases |
 
