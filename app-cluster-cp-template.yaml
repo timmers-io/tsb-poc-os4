@@ -1,0 +1,106 @@
+apiVersion: install.tetrate.io/v1alpha1
+kind: ControlPlane
+metadata:
+  name: controlplane
+  namespace: istio-system
+spec:
+  components:
+    xcp:
+      centralAuthMode: JWT
+      kubeSpec:
+        overlays:
+          - apiVersion: install.xcp.tetrate.io/v1alpha1
+            kind: EdgeXcp
+            name: edge-xcp
+            # These patches enable edges to be able to verify Central's server cert. The host is
+            # changed from a bare IP address as it's difficult to generate a cert with the IP
+            # address in the SANs as the IP isn't known until after the service is deployed.
+            patches:
+              - path: spec.components.edgeServer.kubeSpec.deployment.env
+                value:
+                  - name: ENABLE_RESTORE_ORIGINAL_NAMES
+                    value: "false"
+              - path: "spec.centralAuthJwt.centralCaSecret"
+                value: "xcp-central-ca-bundle"
+    oap:
+      kubeSpec:
+        overlays:
+          - apiVersion: extensions/v1beta1
+            kind: Deployment
+            name: oap-deployment
+            patches:
+              - path: spec.template.spec.containers.[name:oap].env.[name:SW_RECEIVER_GRPC_SSL_CERT_CHAIN_PATH].value
+                value: /skywalking/pkin/tls.crt
+              - path: spec.template.spec.containers.[name:oap].env.[name:SW_CORE_GRPC_SSL_TRUSTED_CA_PATH].value
+                value: /skywalking/pkin/tls.crt
+        service:
+          annotations:
+            service.beta.openshift.io/serving-cert-secret-name: dns.oap-service-account
+    istio:
+      kubeSpec:
+        CNI:
+          binaryDirectory: /var/lib/cni/bin
+          chained: false
+          configurationDirectory: /etc/cni/multus/net.d
+          configurationFileName: istio-cni.conf
+        overlays:
+          - apiVersion: install.istio.io/v1alpha1
+            kind: IstioOperator
+            name: tsb-istiocontrolplane
+            patches:
+              - path: spec.meshConfig.defaultConfig.envoyAccessLogService.address
+                value: oap.istio-system.svc:11800
+              - path: spec.meshConfig.defaultConfig.envoyAccessLogService.tlsSettings.caCertificates
+                value: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+              - path: spec.values.cni.chained
+                value: false
+              - path: spec.values.sidecarInjectorWebhook
+                value:
+                  injectedAnnotations:
+                    k8s.v1.cni.cncf.io/networks: istio-cni
+              - path: spec.meshConfig.defaultConfig.proxyMetadata.ISTIO_META_DNS_CAPTURE
+                value: "true"
+              - path: spec.meshConfig.defaultConfig.proxyMetadata.ISTIO_META_DNS_AUTO_ALLOCATE
+                value: "true"
+              - path: spec.meshConfig.defaultConfig.proxyMetadata.ISTIO_META_PROXY_XDS_VIA_AGENT
+                value: "true"
+              - path: spec.values.global.caAddress
+                value: cert-manager-istio-csr.cert-manager.svc:443
+              - path: spec.components.pilot.k8s.env
+                value:
+                  - name: ENABLE_CA_SERVER
+                    value: "false"
+              - path: spec.components.pilot.k8s.overlays
+                value:
+                  - apiVersion: apps/v1
+                    kind: Deployment
+                    name: istiod
+                    patches:
+                      - path: spec.template.spec.containers.[name:discovery].args[7]
+                        value: --tlsCertFile=/etc/cert-manager/tls/tls.crt
+                      - path: spec.template.spec.containers.[name:discovery].args[8]
+                        value: --tlsKeyFile=/etc/cert-manager/tls/tls.key
+                      - path: spec.template.spec.containers.[name:discovery].args[9]
+                        value: --caCertFile=/etc/cert-manager/ca/root-cert.pem
+                      - path: spec.template.spec.containers.[name:discovery].volumeMounts[6]
+                        value:
+                          mountPath: /etc/cert-manager/tls
+                          name: cert-manager
+                          readOnly: true
+                      - path: spec.template.spec.containers.[name:discovery].volumeMounts[7]
+                        value:
+                          mountPath: /etc/cert-manager/ca
+                          name: ca-root-cert
+                          readOnly: true
+                      - path: spec.template.spec.volumes[6]
+                        value:
+                          name: cert-manager
+                          secret:
+                            secretName: istiod-tls
+                      - path: spec.template.spec.volumes[7]
+                        value:
+                          configMap:
+                            defaultMode: 420
+                            name: istio-ca-root-cert
+                          name: ca-root-cert
+      traceSamplingRate: 100

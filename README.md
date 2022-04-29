@@ -15,10 +15,11 @@ We will install cert-manager and Elasticsearch on the management plane cluster b
 
 TSB proof of concept files
 
-| Steps                            | Description |
-| :---                             | ----        |
-| [cert-manager](/cert-manager.md) | Install cert-manager and create certificates |
-| [Elasticsearch](/elastic.md)     | Install the Elasticsearch operator and create the Elasticsearch instance |
-| [tsb-mp](/tsb-mp.md)             | TSB Management Plane installation |
+| Steps                                         | Description |
+| :---                                          | ----        |
+| [cert-manager](/cert-manager.md)              | Install cert-manager and create certificates |
+| [Elasticsearch](/elastic.md)                  | Install the Elasticsearch operator and create the Elasticsearch instance |
+| [tsb-mp](/tsb-mp.md)                          | TSB Management Plane installation |
+| [app-cluster01](/app-cluster01.md)  | Onboarding the mp cluster as an application cluster |
 |              | Onboarding additional clusters |
 
