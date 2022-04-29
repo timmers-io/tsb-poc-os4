@@ -118,6 +118,20 @@ oc get secrets -n istio-system
 
 ```
 
+### Install cert-manager
+
+Install cert-manager v1.7.2
+```bash
+oc apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
+
+```
+
+Verify the installation
+```bash
+oc get all -n cert-manager
+
+```
+
 ### Using istio-csr
 ```bash
 oc apply -f https://raw.githubusercontent.com/cert-manager/istio-csr/main/docs/example-issuer.yaml
@@ -220,4 +234,7 @@ oc delete po -n istio-system onboarding-operator-5947659bdc-k2z9w
 
 ```
 
-
+If you see the oap-deployment in CrashLoopBackOff, delete the pod and it will be recreated
+```console
+oap-deployment-84f494c8d5-9jr8r                          1/2     CrashLoopBackOff   4          3m24s
+```
