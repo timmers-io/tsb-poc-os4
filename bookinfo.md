@@ -38,7 +38,7 @@ oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
 
 ```
 
-Deploy the bookinfo application and a the synthetic load generator
+Deploy the bookinfo application and the synthetic load generator
 ```bash
 oc apply -n bookinfo -f apps/bookinfo.yaml
 oc apply -n bookinfo -f apps/synthetic-bookinfo.yaml
