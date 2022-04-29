@@ -1,26 +1,32 @@
 # Install Istio 
 
-## Management plane cluster
+## Application cluster
 
-### Install Istio on the mp cluster
-This management plane cluster will be doing double duty acting as the TSB MP and an application cluster CP
+### Install Istio on the application cluster
+This page explains how to onboard a Kubernetes cluster to an existing Tetrate Service Bridge management plane.
 
 From the root folder of this project, set these enviroment variables.
 ```bash
 export FOLDER='./files'
 export TSB_FQDN="tsb.example.tetrate.com"
 export REGISTRY=us-central1-docker.pkg.dev/example/tsb-147
-export CLUSTER_NAME="app-cluster01"
+export CLUSTER_NAME="app-cluster02"
 
 ```
 
-Login, then we will apply the cluster configuration
+Before you start:
+
+Verify that you’re logged in to the management plane. If you're not, do with the steps below.
+
 ```bash
 tctl login --org tetrate --tenant tetrate --username admin --password Tetrate123
 
 tctl get org
 
 ```
+Configuring the Management Plane
+
+To create the correct credentials for the cluster to communicate with the management plane, we need to create a cluster object using the management plane API.
 
 ```bash
 cat >"${FOLDER}/${CLUSTER_NAME}-cp.yaml" <<EOF
@@ -82,6 +88,8 @@ tsb-operator-control-plane-d5f87f5bb-mf555   1/1     Running   0          15s
 ### Secrets
 The control plane needs secrets in order to authenticate with the hosted management plane. The manifest render command for the cluster uses the tctl tool to retrieve tokens to communicate with the management plane automatically, so you only need to provide Elastic credentials, XCP edge certificate secret, and the cluster name (so that the CLI tool can get tokens with the correct scope). Token generation is safe to run multiple times as it does not revoke any previously created tokens.
 
+> ***NOTE***: Change your k8s context to point to the mp cluster so we can pull the credentials to pass into the tctl command
+
 Then you can run the following command to generate the control plane secrets:
 ```bash
 export ES_CACERT=`oc get secret elasticsearch-es-http-ca-internal -n es -o json | jq -r '.data."tls.crt"' | base64 -d | awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'`
@@ -96,6 +104,7 @@ tctl install manifest control-plane-secrets \
     --elastic-ca-certificate="$ES_CACERT" > ${FOLDER}/${CLUSTER_NAME}-controlplane-secrets.yaml
 
 ```
+> ***NOTE***: Change your k8s context to point to the application cluster
 
 Apply them to the cluster:
 ```bash
