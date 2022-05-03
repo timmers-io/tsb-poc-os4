@@ -21,7 +21,8 @@ TSB proof of concept files
 | [Elasticsearch](/elastic.md)         | Install the Elasticsearch operator and create the Elasticsearch instance |
 | [tsb-mp](/tsb-mp.md)                 | TSB Management Plane installation |
 | [app-cluster01](/app-cluster01.md)   | Onboarding the mp cluster as an application cluster |
-| [app-cluster02](/app-cluster02.md)   | Onboarding additional clusters |
+| [app-cluster02](/app-cluster02.md)   | Onboarding an additional OpenShift cluster |
+| [app-cluster03](/app-cluster03.md)   | Onboarding an EKS cluster |
 | [bookinfo](/bookinfo.md)             | Deploying bookinfo |
 | [tsb-config](/tsb-config.md)         | Creating TSB Tenants, Workspaces, and Groups |
 | use-cases                            | Implementing Use Cases |
