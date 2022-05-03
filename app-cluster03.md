@@ -83,6 +83,7 @@ The control plane needs secrets in order to authenticate with the hosted managem
 
 Then you can run the following command to generate the control plane secrets:
 ```bash
+export ES_HOST=`oc get svc -n es elasticsearch-es-http -o json | jq -r '.status.loadBalancer.ingress[0].hostname'`
 export ES_CACERT=`oc get secret elasticsearch-es-http-ca-internal -n es -o json | jq -r '.data."tls.crt"' | base64 -d | awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'`
 export ES_PASSWORD=`oc get secret -n es elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 -d`
 export XCP_CA_CERT=`oc get secrets -n tsb xcp-central-cert -ojsonpath='{.data.ca\.crt}' | base64 -d`
@@ -156,7 +157,7 @@ A production configuration would use a static profile
 The `app-cluster-cp-template.yaml` file contains the boiler plate configuration for creating a control plane that uses the cert-manager-istio-csr.cert-manager.svc for certificate management.  We will use that and then add in our cluster specifc settings here:
 
 ```bash
-cat app-cluster-cp-template.yaml > "${FOLDER}/${CLUSTER_NAME}-controlplane-config.yaml"
+cat app-cluster-cp-eks-template.yaml > "${FOLDER}/${CLUSTER_NAME}-controlplane-config.yaml"
 
 cat >>"${FOLDER}/${CLUSTER_NAME}-controlplane-config.yaml" <<EOF
   hub: $REGISTRY

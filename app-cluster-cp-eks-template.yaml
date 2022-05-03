@@ -1,0 +1,62 @@
+apiVersion: install.tetrate.io/v1alpha1
+kind: ControlPlane
+metadata:
+  name: controlplane
+  namespace: istio-system
+spec:
+  components:
+    xcp:
+      centralAuthMode: JWT
+    istio:
+      kubeSpec:
+        overlays:
+          - apiVersion: install.istio.io/v1alpha1
+            kind: IstioOperator
+            name: tsb-istiocontrolplane
+            patches:
+              - path: spec.meshConfig.defaultConfig.proxyMetadata.ISTIO_META_DNS_CAPTURE
+                value: "true"
+              - path: spec.meshConfig.defaultConfig.proxyMetadata.ISTIO_META_DNS_AUTO_ALLOCATE
+                value: "true"
+              - path: spec.meshConfig.defaultConfig.proxyMetadata.ISTIO_META_PROXY_XDS_VIA_AGENT
+                value: "true"
+              - path: spec.values.global.caAddress
+                value: cert-manager-istio-csr.cert-manager.svc:443
+              - path: spec.components.pilot.k8s.env
+                value:
+                  - name: ENABLE_CA_SERVER
+                    value: "false"
+              - path: spec.components.pilot.k8s.overlays
+                value:
+                  - apiVersion: apps/v1
+                    kind: Deployment
+                    name: istiod
+                    patches:
+                      - path: spec.template.spec.containers.[name:discovery].args[-1]
+                        value: --tlsCertFile=/etc/cert-manager/tls/tls.crt
+                      - path: spec.template.spec.containers.[name:discovery].args[-1]
+                        value: --tlsKeyFile=/etc/cert-manager/tls/tls.key
+                      - path: spec.template.spec.containers.[name:discovery].args[-1]
+                        value: --caCertFile=/etc/cert-manager/ca/root-cert.pem
+                      - path: spec.template.spec.containers.[name:discovery].volumeMounts[-1]
+                        value:
+                          mountPath: /etc/cert-manager/tls
+                          name: cert-manager
+                          readOnly: true
+                      - path: spec.template.spec.containers.[name:discovery].volumeMounts[-1]
+                        value:
+                          mountPath: /etc/cert-manager/ca
+                          name: ca-root-cert
+                          readOnly: true
+                      - path: spec.template.spec.volumes[-1]
+                        value:
+                          name: cert-manager
+                          secret:
+                            secretName: istiod-tls
+                      - path: spec.template.spec.volumes[-1]
+                        value:
+                          configMap:
+                            defaultMode: 420
+                            name: istio-ca-root-cert
+                          name: ca-root-cert
+      traceSamplingRate: 100
