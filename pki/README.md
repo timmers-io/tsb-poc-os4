@@ -1,12 +1,5 @@
 # Generate certificates 
-Note: The new_certificates directory is in the .gitignore
-
 Be sure to change into the pki folder to run these commands.  You can remove the new_certificates folder to start clean as neeeded.
-
-Create the directory as needed
-```bash
-mkdir new_certificates
-```
 
 ## These commands use "example.com" as the domain
 The name we will use for the custom ca is  "cluster.example.com"
@@ -24,15 +17,21 @@ openssl x509 -req -sha256 -days 365 -CA new_certificates/example.com.crt -CAkey 
 ```
 
 ## Next follow the instuctions for onboarding clusters with istio-csr
+> Make sure you are pointing to the correct kubernetes cluster context
+
+> Create these certificates once and apply to all the control plane clusters you want to have with the same chain of trust
+
 Delete the secret if it already exists - update the namespace as appropriate
 
 ```bash
-kubectl -n auth0-httpbin delete secret auth0-httpbin-credential
+kubectl -n istio-system delete secret custom-ca-example-com
 ```
 
 ```bash
-kubectl create -n auth0-httpbin secret generic auth0-httpbin-credential \
-  --from-file=tls.key=new_certificates/auth0-httpbin.example.com.key \
-  --from-file=tls.crt=new_certificates/auth0-httpbin.example.com.crt \
-  --from-file=ca.crt=new_certificates/example.com.crt
+kubectl create secret generic custom-ca-example-com -n istio-system \
+      --from-file=new_certificates/cluster.example.com.crt \
+      --from-file=new_certificates/cluster.example.com.key \
+      --from-file=new_certificates/example.com.crt
+
 ```
+
