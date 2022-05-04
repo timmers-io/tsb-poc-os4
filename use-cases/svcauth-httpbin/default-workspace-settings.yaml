@@ -1,0 +1,14 @@
+---
+apiVersion: api.tsb.tetrate.io/v2
+kind: WorkspaceSetting
+metadata:
+  displayName: secure-default
+  name: secure-default
+  organization: tetrate
+  tenant: tetrate
+  workspace: svcauth-httpbin
+spec:
+  defaultSecuritySetting:
+    authenticationSettings:
+      trafficMode: REQUIRED
+  displayName: secure-default

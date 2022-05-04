@@ -1,0 +1,7 @@
+
+
+svcauth-httpbin
+
+kubectl exec "$(kubectl get pod  -n svcauth-httpbin -o jsonpath={.items..metadata.name})" -c istio-proxy -n svcauth-httpbin -- openssl s_client -showcerts -connect httpbin.foo:8000 > httpbin-proxy-cert.txt
+
+kubectl exec "$(kubectl get pod  -n foo -o jsonpath={.items..metadata.name})" -c istio-proxy -n foo -- openssl s_client -showcerts -connect httpbin.foo:8000 > httpbin-proxy-cert.txt

@@ -1,0 +1,11 @@
+apiversion: api.tsb.tetrate.io/v2
+kind: Workspace
+metadata:
+  organization: tetrate
+  tenant: tetrate
+  name: svcauth-httpbin
+spec:
+  displayName: svcauth Httpbin Workspace
+  namespaceSelector:
+    names:
+      - "*/svcauth-httpbin"
