@@ -126,9 +126,12 @@ kubectl get all -n cert-manager
 
 ### Using istio-csr
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/cert-manager/istio-csr/main/docs/example-issuer.yaml
+oc apply -f example-issuer.yaml
 
 ```
+
+> Note: based on this https://raw.githubusercontent.com/cert-manager/istio-csr/main/docs/example-issuer.yaml
+
 
 > to be replaced with https://cert-manager.io/docs/configuration/venafi/#creating-an-issuer-resource
 

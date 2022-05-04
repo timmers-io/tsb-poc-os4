@@ -5,7 +5,7 @@ You can remove the new_certificates folder to start clean as neeeded.
 The name we will use for the custom ca is  "example.com"
 
 ```bash
-openssl req -x509 -sha256 -nodes -days 365 -extension v3_ca -newkey rsa:2048 -subj '/O=example Inc./CN=example.com' -keyout pki/new_certificates/example.com.key -out pki/new_certificates/example.com.crt
+openssl req -x509 -sha256 -nodes -days 365 -extensions v3_ca -newkey rsa:2048 -subj '/O=example Inc./CN=example.com' -keyout pki/new_certificates/example.com.key -out pki/new_certificates/example.com.crt
 ```
 
 ## Next follow the instuctions for onboarding clusters with istio-csr
