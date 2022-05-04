@@ -1,6 +1,8 @@
 # Testing Service to Service AuthZ using httpbin and sleep
 In this use case, we will install three applications in three separate namespaces to demonstrate service to service AuthZ.  We will also create distinct service accounts.
 
+![Service AuthZ](images/svcauth.png "Service AuthZ")
+
 ## First install the httpbin application 
 
 ```bash
