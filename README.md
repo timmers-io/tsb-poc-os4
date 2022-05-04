@@ -25,5 +25,5 @@ TSB proof of concept files
 | [app-cluster03](/app-cluster03.md)   | Onboarding an EKS cluster |
 | [bookinfo](/bookinfo.md)             | Deploying bookinfo |
 | [tsb-config](/tsb-config.md)         | Creating TSB Tenants, Workspaces, and Groups |
-| use-cases                            | Implementing Use Cases |
+| [use-cases](/use-cases)              | Implementing Use Cases |
 
