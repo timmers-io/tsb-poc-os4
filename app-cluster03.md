@@ -126,7 +126,7 @@ kubectl get all -n cert-manager
 
 ### Using istio-csr
 ```bash
-oc apply -f example-issuer.yaml
+kubectl apply -f example-issuer.yaml
 
 ```
 
