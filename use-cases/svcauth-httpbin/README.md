@@ -4,9 +4,9 @@ In this use case, we will install three applications in three separate namespace
 ![Service AuthZ](images/svcauth.png "Service AuthZ")
 
 
-Change into the directory of this project, then set these enviroment variables.
+Change into the directory of this use case, then set these enviroment variables.
 
-Set your kubernetes context to the desired cluster.
+Set your kubernetes context to the desired cluster. If this is an OpenShift cluster, use the oc commands where required.
 
 ## First install the httpbin application 
 
