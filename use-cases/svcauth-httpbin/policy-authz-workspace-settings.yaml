@@ -5,7 +5,7 @@ metadata:
   displayName: secure-default
   name: secure-default
   organization: tetrate
-  tenant: digital-nonprod
+  tenant: tetrate
   workspace: svcauth-httpbin
 spec:
   defaultSecuritySetting:
