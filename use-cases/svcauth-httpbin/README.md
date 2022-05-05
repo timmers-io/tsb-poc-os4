@@ -3,51 +3,102 @@ In this use case, we will install three applications in three separate namespace
 
 ![Service AuthZ](images/svcauth.png "Service AuthZ")
 
+
+Change into the directory of this project, then set these enviroment variables.
+
+Set your kubernetes context to the desired cluster.
+
 ## First install the httpbin application 
 
 ```bash
-kubectl create namespace svcauth-httpbin
-kubectl label namespace svcauth-httpbin istio-injection=enabled --overwrite=true
+export APP_NS='svcauth-httpbin'
+
+kubectl create namespace $APP_NS
+kubectl label namespace $APP_NS istio-injection=enabled --overwrite=true
 
 ```
 
+Apply OpenShift network configuration:
 ```bash
-kubectl apply -n svcauth-httpbin -f httpbin.yaml
+cat <<EOF | oc -n $APP_NS create -f -
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: istio-cni
+EOF
+
+oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
+
+```
+
+Install the app
+```bash
+kubectl apply -n $APP_NS -f httpbin.yaml
 ```
 Verify the httpbin app is running before continuing
 
 ```bash
-kubectl get po -n svcauth-httpbin
+kubectl get po -n $APP_NS -w
 ```
 You should see one pod running with 2 containers (app and sidecar)
 
 ## Next install the sleep application 
 
 ```bash
-kubectl create namespace svcauth-sleep
-kubectl label namespace svcauth-sleep istio-injection=enabled --overwrite=true
+export APP_NS='svcauth-sleep'
+
+kubectl create namespace $APP_NS
+kubectl label namespace $APP_NS istio-injection=enabled --overwrite=true
+
+```
+
+Apply OpenShift network configuration:
+```bash
+cat <<EOF | oc -n $APP_NS create -f -
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: istio-cni
+EOF
+
+oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
 
 ```
 
 ```bash
-kubectl apply -n svcauth-sleep -f sleep.yaml
+kubectl apply -n $APP_NS -f sleep.yaml
 ```
 Verify the sleep app is running before continuing
 
 ```bash
-kubectl get po -n svcauth-sleep
+kubectl get po -n $APP_NS
 ```
 You should see one pod running with 2 containers (app and sidecar)
 
 ## Now, install the another sleep application in a non istio-injection namespace
 
 ```bash
-kubectl create namespace svcauth-sleep-nonistio
+export APP_NS='svcauth-sleep-nonistio'
+
+kubectl create namespace $APP_NS
+
+```
+
+Apply OpenShift network configuration:
+```bash
+cat <<EOF | oc -n $APP_NS create -f -
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: istio-cni
+EOF
+
+oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
 
 ```
 
 ```bash
-kubectl apply -n svcauth-sleep-nonistio -f sleep.yaml
+kubectl apply -n $APP_NS -f sleep.yaml
 ```
 Verify the sleep app is running before continuing
 
@@ -63,6 +114,7 @@ For this use case, we will be testing connectivity inside the kubernetes cluster
 
 ```bash
 tctl apply -f svcauth-httpbin-workspace.yaml
+
 ```
 
 ## Let's do some connection testing
@@ -184,11 +236,13 @@ Status code:200
 # Next we will add another application and the configuration to explicitly trust based on service account
 ```bash
 kubectl apply -n svcauth-sleep -f sleep-auth.yaml
+
 ```
 Verify the sleep app is running before continuing
 
 ```bash
 kubectl get po -n svcauth-sleep
+
 ```
 You should see one sleep-auth pod running with 2 containers (app and sidecar).  In addition, if we inspect the `sleep-auth.yaml` file, we will see the new service account specified:
 ```bash
@@ -233,12 +287,7 @@ We have made one minor update to the defaultSecuritySettings:
 ```
 This will restrict service to service authorization to only services that present the identity linked to the svcauth-sleep/sleep-auth service account. This is linked to the SPIFFE workload identity encoded in the x509 ceritifcate that is utilized by the sidecar proxy when making inter-mesh service calls. 
 
-Note: In the TSB UI, you can navigate to the AUDIT LOGS tab for this workspace and see a "diff" of the change being recorded:
-```bash
-https://fiserv.tsb.azure.tetrate.com/mp/workspaces/svcauth-httpbin/tenants/digital-nonprod?tab=audit_logs
-```
-
-![Workspace Audit Logs](images/WorkspaceSettings-AuditLogs.png "Workspace Audit Logs")
+Note: In the TSB UI, you can navigate to the AUDIT LOGS tab for this workspace and see a "diff" of the change being recorded.
 
 ## Test from both instances of sleep (trusted and non-trusted)
 
