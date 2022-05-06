@@ -4,6 +4,8 @@ You can remove the new_certificates folder to start clean as neeeded.
 ## These commands use "example.com" as the domain
 The name we will use for the custom ca is  "example.com"
 
+## Do NOT recreate these if you are already using them in clusters - we want the clusters to have the same chain of trust!
+
 ```bash
 openssl req -x509 -sha256 -nodes -days 365 -extensions v3_ca -newkey rsa:2048 -subj '/O=example Inc./CN=example.com' -keyout pki/new_certificates/example.com.key -out pki/new_certificates/example.com.crt
 ```
@@ -12,6 +14,13 @@ openssl req -x509 -sha256 -nodes -days 365 -extensions v3_ca -newkey rsa:2048 -s
 > Make sure you are pointing to the correct kubernetes cluster context
 
 > Create this certificate once and apply to all the control plane clusters you want to have with the same chain of trust
+
+Create the istio-system namespace if it is not alreay there
+```bash
+# We need this namespace to exist since our cert will be placed there
+kubectl create namespace istio-system
+
+```
 
 Delete the secret if it already exists - update the namespace as appropriate
 
@@ -34,3 +43,6 @@ basicConstraints = critical,CA:TRUE
 subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid:always,issuer:always
 ```
+## Nice getting started guide here
+https://github.com/cert-manager/istio-csr/blob/main/docs/getting_started.md
+

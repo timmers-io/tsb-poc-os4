@@ -31,14 +31,11 @@ oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
 
 ```
 
-Install the app
+Install the app - Verify the httpbin app is running before continuing
 ```bash
 kubectl apply -n $APP_NS -f httpbin.yaml
-```
-Verify the httpbin app is running before continuing
-
-```bash
 kubectl get po -n $APP_NS -w
+
 ```
 You should see one pod running with 2 containers (app and sidecar)
 
@@ -65,13 +62,11 @@ oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
 
 ```
 
+Install the app - Verify the httpbin app is running before continuing
 ```bash
 kubectl apply -n $APP_NS -f sleep.yaml
-```
-Verify the sleep app is running before continuing
+kubectl get po -n $APP_NS -w
 
-```bash
-kubectl get po -n $APP_NS
 ```
 You should see one pod running with 2 containers (app and sidecar)
 
@@ -97,13 +92,11 @@ oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
 
 ```
 
+Verify the sleep app is running before continuing
 ```bash
 kubectl apply -n $APP_NS -f sleep.yaml
-```
-Verify the sleep app is running before continuing
+kubectl get po -n svcauth-sleep-nonistio -w
 
-```bash
-kubectl get po -n svcauth-sleep-nonistio
 ```
 You should see one pod running with one container
 
