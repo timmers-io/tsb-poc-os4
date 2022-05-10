@@ -15,7 +15,7 @@ openssl req -x509 -sha256 -nodes -days 365 -extensions v3_ca -newkey rsa:2048 -s
 
 > Create this certificate once and apply to all the control plane clusters you want to have with the same chain of trust
 
-Create the istio-system namespace if it is not alreay there
+Create the istio-system namespace if it is not already there
 ```bash
 # We need this namespace to exist since our cert will be placed there
 kubectl create namespace istio-system
