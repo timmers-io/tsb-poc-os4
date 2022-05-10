@@ -32,6 +32,10 @@ metadata:
   organization: tetrate
 spec:
   tokenTtl: "8760h"
+  tier1Cluster: false
+  network: global
+  locality:
+    region: us-east-1
 EOF
 
 ```
@@ -69,7 +73,7 @@ oc apply -f ${FOLDER}/clusteroperators.yaml
 ```
 Verify it is running:
 ```bash
-oc get po -n istio-system
+oc get po -n istio-system -w
 
 ```
 Should look like this:
@@ -139,6 +143,15 @@ A production configuration would use a static profile
 # 	--set "volumeMounts[0].mountPath=/var/run/secrets/istio-csr" \
 # 	--set "volumes[0].name=root-ca" \
 # 	--set "volumes[0].secret.secretName=istio-root-ca"
+```
+
+### Apply the common root CA (created following steps in the PKI folder)
+
+```bash
+kubectl create -n istio-system secret generic custom-ca-example-com \
+  --from-file=tls.crt=pki/new_certificates/example.com.crt \
+  --from-file=tls.key=pki/new_certificates/example.com.key
+
 ```
 
 ### Creating the Istio control plane for the application cluster

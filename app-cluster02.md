@@ -164,6 +164,15 @@ A production configuration would use a static profile
 # 	--set "volumes[0].secret.secretName=istio-root-ca"
 ```
 
+### Apply the common root CA (created following steps in the PKI folder)
+
+```bash
+kubectl create -n istio-system secret generic custom-ca-example-com \
+  --from-file=tls.crt=pki/new_certificates/example.com.crt \
+  --from-file=tls.key=pki/new_certificates/example.com.key
+
+```
+
 ### Creating the Istio control plane for the application cluster
 
 The `app-cluster-cp-template.yaml` file contains the boiler plate configuration for creating a control plane that uses the cert-manager-istio-csr.cert-manager.svc for certificate management.  We will use that and then add in our cluster specifc settings here:
