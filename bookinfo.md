@@ -23,17 +23,13 @@ oc label namespace $APP_NS istio-injection=enabled
 
 Apply OpenShift network configuration:
 ```bash
-cat >"${FOLDER}/oc_networkattach.yaml" <<EOF
+cat <<EOF | oc -n $APP_NS create -f -
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
   name: istio-cni
 EOF
 
-```
-
-```bash
-oc -n $APP_NS create -f $FOLDER/oc_networkattach.yaml
 oc adm policy add-scc-to-group anyuid system:serviceaccounts:$APP_NS
 
 ```
