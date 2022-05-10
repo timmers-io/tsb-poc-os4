@@ -174,8 +174,12 @@ oc apply -f ${FOLDER}/managementplane.yaml
 ```
 
 You can monitor the progress of the pods starting up:
+```bash
+$ oc get po -n tsb -w
+
+```
+> This could take 3-5 minutes
 ```console
-$ oc get po -n tsb
 NAME                                            READY   STATUS              RESTARTS   AGE
 envoy-866cb587cd-2xk4p                          1/1     Running             0          25s
 envoy-866cb587cd-mhgbz                          1/1     Running             0          25s
@@ -208,6 +212,7 @@ tctl config clusters set default --bridge-address $TSB_FQDN:8443
 tctl config clusters set default --tls-insecure
 
 tctl config view
+
 ```
 
 ### NOTE: we now need to update DNS to point to the LoadBalancer service created for envoy
