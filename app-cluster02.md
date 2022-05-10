@@ -38,6 +38,10 @@ metadata:
   organization: tetrate
 spec:
   tokenTtl: "8760h"
+  tier1Cluster: false
+  network: global
+  locality:
+    region: us-east-1
 EOF
 
 ```
