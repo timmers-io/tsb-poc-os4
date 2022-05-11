@@ -79,7 +79,7 @@ oc apply -f ${FOLDER}/clusteroperators.yaml
 ```
 Verify it is running:
 ```bash
-oc get po -n istio-system
+oc get po -n istio-system -w
 
 ```
 Should look like this:
@@ -219,7 +219,7 @@ oc adm policy add-scc-to-user privileged -n istio-system -z xcp-edge # SA for XC
 
 You can monitor the pods coming up:
 ```bash
-oc get po -n istio-system
+oc get po -n istio-system -w
 
 ```
 

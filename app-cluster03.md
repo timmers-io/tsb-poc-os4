@@ -38,6 +38,10 @@ metadata:
   organization: tetrate
 spec:
   tokenTtl: "8760h"
+  tier1Cluster: false
+  network: public
+  locality:
+    region: us-east-2
 EOF
 
 ```
@@ -188,7 +192,7 @@ kubectl apply -f ${FOLDER}/${CLUSTER_NAME}-controlplane-config.yaml
 
 You can monitor the pods coming up:
 ```bash
-kubectl get po -n istio-system
+kubectl get po -n istio-system -w
 
 ```
 
