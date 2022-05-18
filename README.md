@@ -23,6 +23,7 @@ TSB proof of concept files
 | [app-cluster01](/app-cluster01.md)   | Onboarding the mp cluster as an application cluster |
 | [app-cluster02](/app-cluster02.md)   | Onboarding an additional OpenShift cluster |
 | [app-cluster03](/app-cluster03.md)   | Onboarding an EKS cluster |
+| [tier1-cluster](/tier1-cluster.md)   | Onboarding an EKS tier1 cluster |
 | [bookinfo](/bookinfo.md)             | Deploying bookinfo |
 | [tsb-config](/tsb-config.md)         | Creating TSB Tenants, Workspaces, and Groups |
 | [use-cases](/use-cases)              | Implementing Use Cases |
