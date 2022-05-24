@@ -24,10 +24,19 @@ tctl login --org tetrate --tenant tetrate --username admin --password Tetrate123
 tctl get org
 
 ```
-Configuring the Management Plane
+Configuring the Cluster
 
 To create the correct credentials for the cluster to communicate with the management plane, we need to create a cluster object using the management plane API.
 
+Update these settings as needed:
+```bash
+export CLUSTER_NAME="app-cluster02"
+export NETWORK="global"
+export REGION="us-east-1"
+
+```
+
+Then create the cluster yaml file:
 ```bash
 cat >"${FOLDER}/${CLUSTER_NAME}-cp.yaml" <<EOF
 ---
@@ -39,9 +48,9 @@ metadata:
 spec:
   tokenTtl: "8760h"
   tier1Cluster: false
-  network: global
+  network: $NETWORK
   locality:
-    region: us-east-1
+    region: $REGION
 EOF
 
 ```

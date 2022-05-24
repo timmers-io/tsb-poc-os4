@@ -10,7 +10,6 @@ From the root folder of this project, set these enviroment variables.
 export FOLDER='./files'
 export TSB_FQDN="tsb.example.tetrate.com"
 export REGISTRY=us-central1-docker.pkg.dev/example/tsb-147
-export CLUSTER_NAME="app-cluster01"
 
 ```
 
@@ -22,6 +21,15 @@ tctl get org
 
 ```
 
+Update these settings as needed:
+```bash
+export CLUSTER_NAME="app-cluster01"
+export NETWORK="global"
+export REGION="us-east-1"
+
+```
+
+Then create the cluster yaml file:
 ```bash
 cat >"${FOLDER}/${CLUSTER_NAME}-cp.yaml" <<EOF
 ---
@@ -33,9 +41,9 @@ metadata:
 spec:
   tokenTtl: "8760h"
   tier1Cluster: false
-  network: global
+  network: $NETWORK
   locality:
-    region: us-east-1
+    region: $REGION
 EOF
 
 ```

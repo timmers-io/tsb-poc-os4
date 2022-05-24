@@ -10,7 +10,6 @@ From the root folder of this project, set these enviroment variables.
 export FOLDER='./files'
 export TSB_FQDN="tsb.example.tetrate.com"
 export REGISTRY=us-central1-docker.pkg.dev/example/tsb-147
-export CLUSTER_NAME="app-cluster03"
 
 ```
 
@@ -24,10 +23,19 @@ tctl login --org tetrate --tenant tetrate --username admin --password Tetrate123
 tctl get org
 
 ```
-Configuring the Management Plane
+Configuring the Cluster
 
 To create the correct credentials for the cluster to communicate with the management plane, we need to create a cluster object using the management plane API.
 
+Update these settings as needed:
+```bash
+export CLUSTER_NAME="app-cluster03"
+export NETWORK="public"
+export REGION="us-east-2"
+
+```
+
+Then create the cluster yaml file:
 ```bash
 cat >"${FOLDER}/${CLUSTER_NAME}-cp.yaml" <<EOF
 ---
@@ -39,9 +47,9 @@ metadata:
 spec:
   tokenTtl: "8760h"
   tier1Cluster: false
-  network: public
+  network: $NETWORK
   locality:
-    region: us-east-2
+    region: $REGION
 EOF
 
 ```
