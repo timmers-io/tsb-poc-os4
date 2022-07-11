@@ -39,7 +39,7 @@ Verify the tctl version is 1.4.7
 ```bash
 export TCTL_CONFIG=./files/tctl-config.yaml
 
-tctl version
+tctl version --local-only
 
 ```
 
