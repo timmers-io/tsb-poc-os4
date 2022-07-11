@@ -175,7 +175,7 @@ oc apply -f ${FOLDER}/managementplane.yaml
 
 You can monitor the progress of the pods starting up:
 ```bash
-$ oc get po -n tsb -w
+oc get po -n tsb -w
 
 ```
 > This could take 3-5 minutes
