@@ -79,6 +79,13 @@ We can then apply it to the cluster:
 oc apply -f ${FOLDER}/clusteroperators.yaml
 
 ```
+
+> ***NOTE***: Use something like the following if you need to disable OPA in this cluster for this namespace:
+```bash
+oc label namespace istio-system openpolicyagent.org/webhook=ignore
+
+```
+
 Verify it is running:
 ```bash
 oc get po -n istio-system -w
