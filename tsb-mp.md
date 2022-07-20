@@ -131,6 +131,45 @@ echo $ES_HOST
 
 ```
 
+## Next, create the management plane yaml depepding on your load balancer type
+
+From the documentation: https://docs.tetrate.io/service-bridge/1.4.x/en-us/knowledge_base/faq#configure-aws-internal-elbs
+
+### If using AWS internal load balancers, use this version of the configuration
+
+```bash
+cat >"${FOLDER}/managementplane.yaml" <<EOF
+apiVersion: install.tetrate.io/v1alpha1
+kind: ManagementPlane
+metadata:
+  name: managementplane
+  namespace: tsb
+spec:
+  hub: $REGISTRY
+  organization: tetrate
+  telemetryStore:
+    elastic:
+      host: $ES_HOST
+      port: 9200
+      version: 7
+      selfSigned: true
+      protocol: https
+  components:
+    frontEnvoy:
+      kubeSpec:
+        service:
+          annotations:
+            service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+    xcp:
+      centralAuthModes:
+        jwt: true
+        mutualTls: false
+EOF
+
+```
+
+### If using AWS external load balancers, use this version of the configuration
+
 ```bash
 cat >"${FOLDER}/managementplane.yaml" <<EOF
 apiVersion: install.tetrate.io/v1alpha1
@@ -156,6 +195,8 @@ spec:
 EOF
 
 ```
+
+
 
 Before applying it, bear in mind that you will have to allow the service accounts of the different management plane components to your OpenShift Authorization Policies.
 ```bash
