@@ -131,7 +131,7 @@ echo $ES_HOST
 
 ```
 
-## Next, create the management plane yaml depepding on your load balancer type
+## Next, create the management plane yaml depending on your load balancer type
 
 From the documentation: https://docs.tetrate.io/service-bridge/1.4.x/en-us/knowledge_base/faq#configure-aws-internal-elbs
 
