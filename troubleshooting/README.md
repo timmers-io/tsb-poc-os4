@@ -7,6 +7,8 @@ When onboarding a cluster to the TSB management plane (MP), the control plane (C
 ## Using the TSB provided containers
 We can begin to troubleshoot by testing basic connectivity from the CP to the MP using the tetrate-troubleshoot container included with the TSB images as part of the release.
 
+## Use the kube context for the control plane cluster you want to test from
+
 ### Running basic connectivity checks
 From the root folder of this project, set these enviroment variables and configure the values to use the tetrate-troubleshoot image.
 ```bash
