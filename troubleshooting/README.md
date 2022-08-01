@@ -9,6 +9,8 @@ We can begin to troubleshoot by testing basic connectivity from the CP to the MP
 
 ## Use the kube context for the control plane cluster you want to test from
 
+> NOTE: use your REGISTRY setting here
+
 ### Running basic connectivity checks
 From the root folder of this project, set these enviroment variables and configure the values to use the tetrate-troubleshoot image.
 ```bash
