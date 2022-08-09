@@ -151,9 +151,7 @@ oc get all -n cert-manager
 oc apply -f example-issuer.yaml
 
 ```
-
-> Note: based on this https://raw.githubusercontent.com/cert-manager/istio-csr/main/docs/example-issuer.yaml
-
+> Note: based on the example-issuer here: https://cert-manager.io/docs/tutorials/istio-csr/istio-csr/#create-a-cert-manager-issuer-and-issuing-certificate
 
 > to be replaced with https://cert-manager.io/docs/configuration/venafi/#creating-an-issuer-resource
 
